@@ -18,7 +18,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  
+  AuthenticationMethods authenticationMethods = AuthenticationMethods();
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -86,8 +87,24 @@ class _SignInScreenState extends State<SignInScreen> {
                                       letterSpacing: 0.6, color: Colors.black),
                                 ),
                                 color: yellowColor,
-                                isLoading: false,
-                                onPressed: () async {}),
+                                isLoading: isLoading,
+                                onPressed: () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  String output =
+                                      await authenticationMethods.signInUser(
+                                          email: emailController.text,
+                                          password: passwordController.text);
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  if (output == 'success') {
+                                  } else {
+                                    Utils().showSnackBar(
+                                        context: context, content: output);
+                                  }
+                                }),
                           )
                         ],
                       )),
