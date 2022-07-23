@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ProductsShowcaseListView extends StatelessWidget {
   final String title;
   final List<Widget> children;
-  const ProductsShowcaseListView(
+  const  ProductsShowcaseListView(
       {Key? key, required this.title, required this.children})
       : super(key: key);
 

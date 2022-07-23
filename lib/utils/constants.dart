@@ -1,11 +1,8 @@
-// import 'package:amazon_clone/model/product_model.dart';
-// import 'package:amazon_clone/screens/account_screen.dart';
-// import 'package:amazon_clone/screens/cart_screen.dart';
+import '../screens/cart_screen.dart';
 import 'package:amazon_clone/screens/account_screen.dart';
 import 'package:amazon_clone/screens/home_screen.dart';
-// import 'package:amazon_clone/screens/more_screen.dart';
-// import 'package:amazon_clone/widgets/simple_product_widget.dart';
 import 'package:flutter/material.dart';
+import '../widgets/simple_product_widget.dart';
 
 const double kAppBarHeight = 80;
 
@@ -27,14 +24,12 @@ const List<String> categoriesList = [
 const List<Widget> screens = [
   HomeScreen(),
    AccountScreen(),
-            Center(
-              child: Text("Cart Screen"),
-            ),
+  CartScreen(),
+            
             Center(
               child: Text("More Screen"),
             ),
   // AccountScreen(),
-  // CartScreen(),
   // MoreScreen(),
 ];
 
@@ -76,68 +71,83 @@ const List<String> adItemNames = [
 const String amazonLogo =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png";
 
-List<Widget> testChildren = [
-  // SimpleProductWidget(
-  //   productModel: ProductModel(
-  //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
-  //       productName: "Rick Astley",
-  //       cost: 9999999999999,
-  //       discount: 0,
-  //       uid: "eioejfbkn",
-  //       sellerName: "Rick Seller",
-  //       sellerUid: "983498ihjb",
-  //       rating: 1,
-  //       noOfRating: 1),
-  // ),
-  // SimpleProductWidget(
-  //   productModel: ProductModel(
-  //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
-  //       productName: "Rick Astley",
-  //       cost: 9999999999999,
-  //       discount: 0,
-  //       uid: "eioejfbkn",
-  //       sellerName: "Rick Seller",
-  //       sellerUid: "983498ihjb",
-  //       rating: 1,
-  //       noOfRating: 1),
-  // ),
-  // SimpleProductWidget(
-  //   productModel: ProductModel(
-  //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
-  //       productName: "Rick Astley",
-  //       cost: 9999999999999,
-  //       discount: 0,
-  //       uid: "eioejfbkn",
-  //       sellerName: "Rick Seller",
-  //       sellerUid: "983498ihjb",
-  //       rating: 1,
-  //       noOfRating: 1),
-  // ),
-  // SimpleProductWidget(
-  //   productModel: ProductModel(
-  //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
-  //       productName: "Rick Astley",
-  //       cost: 9999999999999,
-  //       discount: 0,
-  //       uid: "eioejfbkn",
-  //       sellerName: "Rick Seller",
-  //       sellerUid: "983498ihjb",
-  //       rating: 1,
-  //       noOfRating: 1),
-  // ),
-  // SimpleProductWidget(
-  //   productModel: ProductModel(
-  //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
-  //       productName: "Rick Astley",
-  //       cost: 9999999999999,
-  //       discount: 0,
-  //       uid: "eioejfbkn",
-  //       sellerName: "Rick Seller",
-  //       sellerUid: "983498ihjb",
-  //       rating: 1,
-  //       noOfRating: 1),
-  // )
-];
+// List<Widget> testChildren = [
+//   // SimpleProductWidget(
+//   //   productModel: ProductModel(
+//   //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
+//   //       productName: "Rick Astley",
+//   //       cost: 9999999999999,
+//   //       discount: 0,
+//   //       uid: "eioejfbkn",
+//   //       sellerName: "Rick Seller",
+//   //       sellerUid: "983498ihjb",
+//   //       rating: 1,
+//   //       noOfRating: 1),
+//   // ),
+//   // SimpleProductWidget(
+//   //   productModel: ProductModel(
+//   //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
+//   //       productName: "Rick Astley",
+//   //       cost: 9999999999999,
+//   //       discount: 0,
+//   //       uid: "eioejfbkn",
+//   //       sellerName: "Rick Seller",
+//   //       sellerUid: "983498ihjb",
+//   //       rating: 1,
+//   //       noOfRating: 1),
+//   // ),
+//   // SimpleProductWidget(
+//   //   productModel: ProductModel(
+//   //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
+//   //       productName: "Rick Astley",
+//   //       cost: 9999999999999,
+//   //       discount: 0,
+//   //       uid: "eioejfbkn",
+//   //       sellerName: "Rick Seller",
+//   //       sellerUid: "983498ihjb",
+//   //       rating: 1,
+//   //       noOfRating: 1),
+//   // ),
+//   // SimpleProductWidget(
+//   //   productModel: ProductModel(
+//   //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
+//   //       productName: "Rick Astley",
+//   //       cost: 9999999999999,
+//   //       discount: 0,
+//   //       uid: "eioejfbkn",
+//   //       sellerName: "Rick Seller",
+//   //       sellerUid: "983498ihjb",
+//   //       rating: 1,
+//   //       noOfRating: 1),
+//   // ),
+//   // SimpleProductWidget(
+//   //   productModel: ProductModel(
+//   //       url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png",
+//   //       productName: "Rick Astley",
+//   //       cost: 9999999999999,
+//   //       discount: 0,
+//   //       uid: "eioejfbkn",
+//   //       sellerName: "Rick Seller",
+//   //       sellerUid: "983498ihjb",
+//   //       rating: 1,
+//   //       noOfRating: 1),
+//   // )
+// ];
+
+ List<Widget> testChildren = [
+    SimpleProductWidget(
+        url: "https://m.media-amazon.com/images/I/51QISbJp5-L._SX3000_.jpg"),
+    SimpleProductWidget(
+        url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png"),
+    SimpleProductWidget(
+        url: "https://m.media-amazon.com/images/I/115yueUc1aL._SX90_SY90_.png"),
+    SimpleProductWidget(
+      url: "https://m.media-amazon.com/images/I/11qyfRJvEbL._SX90_SY90_.png",
+    ),
+    SimpleProductWidget(
+        url: "https://m.media-amazon.com/images/I/11BIyKooluL._SX90_SY90_.png"),
+  ];
+
 
 List<String> keysOfRating = [
   "Very bad",
