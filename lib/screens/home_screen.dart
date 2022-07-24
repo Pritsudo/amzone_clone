@@ -18,20 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   double offset = 0;
   ScrollController controller = ScrollController();
-  List<Widget> testChildren = [
-    SimpleProductWidget(
-        url: "https://m.media-amazon.com/images/I/51QISbJp5-L._SX3000_.jpg"),
-    SimpleProductWidget(
-        url: "https://m.media-amazon.com/images/I/11uufjN3lYL._SX90_SY90_.png"),
-    SimpleProductWidget(
-        url: "https://m.media-amazon.com/images/I/115yueUc1aL._SX90_SY90_.png"),
-    SimpleProductWidget(
-      url: "https://m.media-amazon.com/images/I/11qyfRJvEbL._SX90_SY90_.png",
-    ),
-    SimpleProductWidget(
-        url: "https://m.media-amazon.com/images/I/11BIyKooluL._SX90_SY90_.png"),
-  ];
-
+  
   @override
   void initState() {
     // TODO: implement initState

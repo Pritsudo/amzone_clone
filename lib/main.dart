@@ -1,4 +1,5 @@
 import 'package:amazon_clone/layout/screen_layout.dart';
+import 'package:amazon_clone/screens/result_screen.dart';
 import 'package:amazon_clone/screens/sign_in_screen.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
           } else if (user.hasData) {
             return const ScreenLayout();
           }
-          return SignInScreen();
+          return const SignInScreen();
         },
         stream: FirebaseAuth.instance.authStateChanges(),
       ),
