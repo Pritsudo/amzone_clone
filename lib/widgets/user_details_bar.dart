@@ -1,16 +1,20 @@
+import 'package:amazon_clone/model/user_details_model.dart';
+import 'package:amazon_clone/providers/user_details_provider.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:amazon_clone/utils/constants.dart';
 import 'package:amazon_clone/utils/utils.dart';
-import '../model/user_details_model.dart';
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
 
 class UserDetailsBar extends StatelessWidget {
   final double offset;
-  final UserDetialsModel userDetails;
-  const UserDetailsBar({Key? key, required this.offset, required this.userDetails}) : super(key: key);
+  const UserDetailsBar({Key? key, required this.offset, }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+   UserDetialsModel userDetails=Provider.of<UserDetailsProvider>(context).userDetails!;
     Size screenSize = Utils().getScreenSize();
 
     return Positioned(

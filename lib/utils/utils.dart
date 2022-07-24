@@ -1,4 +1,8 @@
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Utils {
   Size getScreenSize() {
@@ -18,5 +22,17 @@ class Utils {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10))),
     ));
+  }
+
+  Future<Uint8List?> pickImage() async {
+    ImagePicker picker = ImagePicker();
+    XFile? file = await picker.pickImage(source: ImageSource.gallery);
+    if (file != null) {
+      return file.readAsBytes();
+    }
+  }
+
+  String getUid() {
+    return (100000 + Random().nextInt(10000)).toString();
   }
 }

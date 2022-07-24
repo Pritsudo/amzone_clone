@@ -1,10 +1,14 @@
+import 'package:amazon_clone/screens/sell_screen.dart';
 import 'package:amazon_clone/utils/constants.dart';
 import 'package:amazon_clone/utils/utils.dart';
 import 'package:amazon_clone/widgets/account_screen_app_bar.dart';
 import 'package:amazon_clone/widgets/custom_main_button.dart';
 import 'package:amazon_clone/widgets/products_showcase_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../model/user_details_model.dart';
+import '../providers/user_details_provider.dart';
 import '../utils/color_theme.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -43,15 +47,22 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   color: Colors.yellow,
                   isLoading: false,
-                  onPressed: () {}),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const SellScreen()));
+                  }),
               ProductsShowcaseListView(
                   title: "Your Orders", children: testChildren),
-           const Padding(
-              padding:  EdgeInsets.all(15.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child:  Text('Orders Requests',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),)),
-            ),
+              const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Orders Requests',
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    )),
+              ),
               Expanded(
                   child: ListView.builder(
                 itemBuilder: (context, index) {
@@ -82,6 +93,8 @@ class IntroductionWidgetAccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserDetialsModel userDetails =
+        Provider.of<UserDetailsProvider>(context).userDetails!;
     return Container(
       height: kAppBarHeight / 2,
       decoration: const BoxDecoration(
@@ -107,7 +120,7 @@ class IntroductionWidgetAccountScreen extends StatelessWidget {
                     text: 'Hello',
                     style: TextStyle(color: Colors.grey[800], fontSize: 26)),
                 TextSpan(
-                    text: 'Prit',
+                    text: '${userDetails.name}',
                     style: TextStyle(
                         color: Colors.grey[800],
                         fontSize: 26,

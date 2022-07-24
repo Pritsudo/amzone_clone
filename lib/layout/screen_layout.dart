@@ -1,7 +1,8 @@
-
+import 'package:amazon_clone/providers/user_details_provider.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:amazon_clone/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ScreenLayout extends StatefulWidget {
   const ScreenLayout({Key? key}) : super(key: key);
@@ -29,17 +30,16 @@ class _ScreenLayoutState extends State<ScreenLayout> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<UserDetailsProvider>(context).getData();
     return DefaultTabController(
       length: 4,
       child: SafeArea(
         child: Scaffold(
-          body: PageView(
-            controller: pageController,
-            children:screens
-          ),
+          body: PageView(controller: pageController, children: screens),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.grey[400]!, width: 1))),
+                border: Border(
+                    top: BorderSide(color: Colors.grey[400]!, width: 1))),
             child: TabBar(
                 indicator: const BoxDecoration(
                     border: Border(
@@ -55,15 +55,18 @@ class _ScreenLayoutState extends State<ScreenLayout> {
                   ),
                   Tab(
                     child: Icon(Icons.account_circle_outlined,
-                        color: currentPage == 1 ? activeCyanColor : Colors.black),
+                        color:
+                            currentPage == 1 ? activeCyanColor : Colors.black),
                   ),
                   Tab(
                     child: Icon(Icons.shopping_cart,
-                        color: currentPage == 2 ? activeCyanColor : Colors.black),
+                        color:
+                            currentPage == 2 ? activeCyanColor : Colors.black),
                   ),
                   Tab(
                     child: Icon(Icons.menu,
-                        color: currentPage == 3 ? activeCyanColor : Colors.black),
+                        color:
+                            currentPage == 3 ? activeCyanColor : Colors.black),
                   ),
                 ]),
           ),

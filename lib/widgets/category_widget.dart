@@ -1,3 +1,4 @@
+import 'package:amazon_clone/screens/result_screen.dart';
 import 'package:amazon_clone/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,7 @@ class CategoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> ResultScreen(query: categoriesList[index ] )));
             },
       child: Container(
         decoration: BoxDecoration(
