@@ -1,4 +1,5 @@
 import 'package:amazon_clone/model/product_model.dart';
+import 'package:amazon_clone/screens/product_screen.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:amazon_clone/utils/constants.dart';
 import 'package:amazon_clone/utils/utils.dart';
@@ -15,7 +16,7 @@ class ResultWidget extends StatelessWidget {
     Size screenSize = Utils().getScreenSize();
     return GestureDetector(
       onTap: (){
-        
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductScreen(productModel: products)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),

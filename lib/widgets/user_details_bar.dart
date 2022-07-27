@@ -14,7 +14,7 @@ class UserDetailsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-   UserDetialsModel userDetails=Provider.of<UserDetailsProvider>(context).userDetails!;
+   UserDetialsModel userDetails=Provider.of<UserDetailsProvider>(context).userDetails;
     Size screenSize = Utils().getScreenSize();
 
     return Positioned(

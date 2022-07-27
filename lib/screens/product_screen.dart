@@ -16,6 +16,9 @@ import 'package:amazon_clone/widgets/search_bar_widget.dart';
 import 'package:amazon_clone/widgets/user_details_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_details_provider.dart';
 
 class ProductScreen extends StatefulWidget {
   final ProductModel productModel;
@@ -102,8 +105,14 @@ class _ProductScreenState extends State<ProductScreen> {
                               color: Colors.orange,
                               isLoading: false,
                               onPressed: () async {
-                                CloudFirestoreClass().addProductOrders(
-                                    model: widget.productModel);
+                                await CloudFirestoreClass().addProductOrders(
+                                    model: widget.productModel,
+                                    userDetials:
+                                        Provider.of<UserDetailsProvider>(
+                                                context,listen: false)
+                                            .userDetails);
+                                Utils().showSnackBar(
+                                    context: context, content: 'Done');
                               }),
                           spaceThingy,
                           CustomMainButton(

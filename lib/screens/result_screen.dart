@@ -1,5 +1,6 @@
 import 'package:amazon_clone/widgets/result_widget.dart';
 import 'package:amazon_clone/widgets/search_bar_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
@@ -24,7 +25,8 @@ class ResultScreen extends StatelessWidget {
               child: RichText(
                   text: TextSpan(children: [
                 const TextSpan(
-                    text: "Showing results for ", style: TextStyle(fontSize: 17)),
+                    text: "Showing results for ",
+                    style: TextStyle(fontSize: 17)),
                 TextSpan(
                     text: query,
                     style: const TextStyle(
@@ -33,25 +35,31 @@ class ResultScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: GridView.builder(
-                itemCount: 9,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 2/3
-                ),
-                itemBuilder: (context, index) {
-                  return ResultWidget(products: ProductModel(
-                          url:
-                              'https://images.unsplash.com/photo-1649859395314-bdea587e4524?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60',
-                          productName: 'test test etts test tes te ste ete etete ete ete et etet',
-                          cost: 100,
-                          discount: 50,
-                          uid: 'Ssssssss',
-                          sellerName: 'Test seller',
-                          sellerUid: 'sss',
-                          rating: 2,
-                          noOfRating: 5),);
-                }),
+            child: FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('products')
+                  .where('productName', isEqualTo: query)
+                  .get(),
+              builder: (context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container();
+                } else {
+                  return GridView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, childAspectRatio: 2 / 3.5),
+                      itemBuilder: (context, index) {
+                        ProductModel product = ProductModel.getModelFromJson(
+                            json: snapshot.data!.docs[index].data());
+                        return ResultWidget(
+                          products:product
+                        );
+                      });
+                }
+              },
+            ),
           )
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:amazon_clone/model/product_model.dart';
+import 'package:amazon_clone/providers/user_details_provider.dart';
 import 'package:amazon_clone/resources/cloudfirestore_methods.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:amazon_clone/utils/constants.dart';
@@ -10,6 +11,7 @@ import 'package:amazon_clone/widgets/user_details_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../model/user_details_model.dart';
 
@@ -56,7 +58,7 @@ class _CartScreenState extends State<CartScreen> {
                             isLoading: false,
                             color: yellowColor,
                             onPressed: () async {
-                              await CloudFirestoreClass().buyAllItemsInCart();
+                              await CloudFirestoreClass().buyAllItemsInCart(userDetials: Provider.of<UserDetailsProvider>(context,listen: false).userDetails);
                               Utils().showSnackBar(
                                   context: context, content: 'Done');
                             },

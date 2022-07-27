@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:amazon_clone/model/order_request_model.dart';
 import 'package:amazon_clone/model/product_model.dart';
 import 'package:amazon_clone/model/review_model.dart';
 import 'package:amazon_clone/model/user_details_model.dart';
@@ -109,6 +110,7 @@ class CloudFirestoreClass {
         .doc(productUid)
         .collection('reviews')
         .add(model.getJson());
+    await changeAverageRating(productUid: productUid, reviewModel: model);
   }
 
   Future addProductToCart({required ProductModel productModel}) async {
@@ -129,7 +131,7 @@ class CloudFirestoreClass {
         .delete();
   }
 
-  Future buyAllItemsInCart() async {
+  Future buyAllItemsInCart({required UserDetialsModel userDetials}) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
@@ -138,16 +140,45 @@ class CloudFirestoreClass {
     for (int i = 0; i < snapshot.docs.length; i++) {
       ProductModel model =
           ProductModel.getModelFromJson(json: snapshot.docs[i].data());
-      addProductOrders(model: model);
+      addProductOrders(model: model, userDetials: userDetials);
       await deleteProductFromCart(uid: model.uid);
     }
   }
 
-  Future addProductOrders({required ProductModel model}) async {
+  Future addProductOrders(
+      {required ProductModel model,
+      required UserDetialsModel userDetials}) async {
     await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth.currentUser!.uid)
         .collection('orders')
         .add(model.getJson());
+    await sendOrderRequest(model: model, userDetialsModel: userDetials);
+  }
+
+  Future sendOrderRequest(
+      {required ProductModel model,
+      required UserDetialsModel userDetialsModel}) async {
+    OrderRequesModel orderRequesModel = OrderRequesModel(
+        orderName: model.productName, buyersAddress: userDetialsModel.address);
+    await firebaseFirestore
+        .collection('users')
+        .doc(model.sellerUid)
+        .collection('orderRequest')
+        .add(orderRequesModel.getJson());
+  }
+
+  Future changeAverageRating(
+      {required String productUid, required ReviewModel reviewModel}) async {
+    DocumentSnapshot snapshot =
+        await firebaseFirestore.collection('products').doc(productUid).get();
+    ProductModel model =
+        ProductModel.getModelFromJson(json: (snapshot.data() as dynamic));
+    int currentRating = model.rating;
+    int newRating = ((currentRating + reviewModel.rating) / 2).toInt();
+    await firebaseFirestore
+        .collection('products')
+        .doc(productUid)
+        .update({'rating': newRating});
   }
 }
