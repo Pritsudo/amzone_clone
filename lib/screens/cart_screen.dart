@@ -1,10 +1,14 @@
 import 'package:amazon_clone/model/product_model.dart';
+import 'package:amazon_clone/resources/cloudfirestore_methods.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:amazon_clone/utils/constants.dart';
+import 'package:amazon_clone/utils/utils.dart';
 import 'package:amazon_clone/widgets/cart_item_widget.dart';
 import 'package:amazon_clone/widgets/custom_main_button.dart';
 import 'package:amazon_clone/widgets/search_bar_widget.dart';
 import 'package:amazon_clone/widgets/user_details_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../model/user_details_model.dart';
@@ -26,43 +30,74 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             Column(
               children: [
-               const SizedBox(height: kAppBarHeight/2,),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomMainButton(
-                      child: const Text(
-                        'Proceed to buy n item',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      color: yellowColor,
-                      isLoading: false,
-                      onPressed: () {}),
+                const SizedBox(
+                  height: kAppBarHeight / 2,
                 ),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: StreamBuilder(
+                      builder: (context,
+                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                              snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CustomMainButton(
+                            child: const Text("Loading"),
+                            isLoading: true,
+                            color: yellowColor,
+                            onPressed: () {},
+                          );
+                        } else {
+                          return CustomMainButton(
+                            child: Text(
+                              "Proceed to buy (${snapshot.data!.docs.length}) items",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            isLoading: false,
+                            color: yellowColor,
+                            onPressed: () async {
+                              await CloudFirestoreClass().buyAllItemsInCart();
+                              Utils().showSnackBar(
+                                  context: context, content: 'Done');
+                            },
+                          );
+                        }
+                      },
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .collection('carts')
+                          .snapshots(),
+                    )),
                 Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return CartItemWidget(
-                        product: ProductModel(
-                            url:
-                                'https://images.unsplash.com/photo-1649859395314-bdea587e4524?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60',
-                            productName: 'test',
-                            cost: 100,
-                            discount: 50,
-                            uid: 'Ssssssss',
-                            sellerName: 'Test seller',
-                            sellerUid: 'sss',
-                            rating: 5,
-                            noOfRating: 5),
+                    child: StreamBuilder(
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    } else {
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          ProductModel model = ProductModel.getModelFromJson(
+                              json: snapshot.data!.docs[index].data());
+                          return CartItemWidget(product: model);
+                        },
+                        itemCount: snapshot.data!.docs.length,
                       );
-                    },
-                    itemCount: 5,
-                  ),
-                )
+                    }
+                  },
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .collection('cart')
+                      .snapshots(),
+                ))
               ],
             ),
             UserDetailsBar(
-                offset: 0,
-                ),
+              offset: 0,
+            ),
           ],
         ),
       ),

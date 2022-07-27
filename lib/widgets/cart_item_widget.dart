@@ -1,4 +1,5 @@
 import 'package:amazon_clone/model/product_model.dart';
+import 'package:amazon_clone/resources/cloudfirestore_methods.dart';
 import 'package:amazon_clone/screens/product_screen.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:amazon_clone/utils/utils.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class CartItemWidget extends StatelessWidget {
   final ProductModel product;
-  const CartItemWidget({Key? key,required this.product}) : super(key: key);
+  const CartItemWidget({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +26,13 @@ class CartItemWidget extends StatelessWidget {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductScreen(productModel: product),
-          ),
-        );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductScreen(productModel: product),
+                  ),
+                );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -41,15 +42,15 @@ class CartItemWidget extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Center(
-                        child: Image.network(
-                           product.url),
+                        child: Image.network(product.url),
                       ),
                     ),
                   ),
-                const  SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   ProductInformationWidget(
-                      productName:
-                          product.productName,
+                      productName: product.productName,
                       cost: product.cost,
                       sellerName: product.sellerName)
                 ],
@@ -75,7 +76,19 @@ class CartItemWidget extends StatelessWidget {
                     dimension: 40),
                 CustomSquareButton(
                     child: Icon(Icons.add),
-                    onPressed: () {},
+                    onPressed: () async {
+                      CloudFirestoreClass().addProductToCart(
+                          productModel: ProductModel(
+                              url: product.url,
+                              productName: product.productName,
+                              cost: product.cost,
+                              discount: product.discount,
+                              uid: Utils().getUid(),
+                              sellerName: product.sellerName,
+                              sellerUid: product.sellerUid,
+                              rating: product.rating,
+                              noOfRating: product.noOfRating));
+                    },
                     color: backgroundColor,
                     dimension: 40),
               ],
@@ -91,7 +104,11 @@ class CartItemWidget extends StatelessWidget {
                   Row(
                     children: [
                       CustomeSimpleRoundedButton(
-                          onPressed: () {}, text: "Delete"),
+                          onPressed: () async {
+                            CloudFirestoreClass()
+                                .deleteProductFromCart(uid: product.uid);
+                          },
+                          text: "Delete"),
                       const SizedBox(
                         width: 5,
                       ),

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:amazon_clone/model/product_model.dart';
 import 'package:amazon_clone/model/review_model.dart';
+import 'package:amazon_clone/resources/cloudfirestore_methods.dart';
 import 'package:amazon_clone/utils/color_theme.dart';
 import 'package:amazon_clone/utils/constants.dart';
 import 'package:amazon_clone/utils/utils.dart';
@@ -13,9 +14,8 @@ import 'package:amazon_clone/widgets/review_dialog.dart';
 import 'package:amazon_clone/widgets/review_widget.dart';
 import 'package:amazon_clone/widgets/search_bar_widget.dart';
 import 'package:amazon_clone/widgets/user_details_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../model/user_details_model.dart';
 
 class ProductScreen extends StatefulWidget {
   final ProductModel productModel;
@@ -74,8 +74,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                   ],
                                 ),
-                                    RatingStarWidget(
-                                        rating: widget.productModel.noOfRating),
+                                RatingStarWidget(
+                                    rating: widget.productModel.noOfRating),
                               ],
                             ),
                           ),
@@ -101,7 +101,10 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                               color: Colors.orange,
                               isLoading: false,
-                              onPressed: () {}),
+                              onPressed: () async {
+                                CloudFirestoreClass().addProductOrders(
+                                    model: widget.productModel);
+                              }),
                           spaceThingy,
                           CustomMainButton(
                               child: const Text(
@@ -110,38 +113,59 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                               color: Colors.yellow,
                               isLoading: false,
-                              onPressed: () {}),
+                              onPressed: () async {
+                                await CloudFirestoreClass().addProductToCart(
+                                    productModel: widget.productModel);
+                                Utils().showSnackBar(
+                                    context: context, content: 'Added to Cart');
+                              }),
                           CustomeSimpleRoundedButton(
                               onPressed: () {
                                 showDialog(
                                     context: context,
-                                    builder: (context) => ReviewDialog());
+                                    builder: (context) => ReviewDialog(
+                                          productUid: widget.productModel.uid,
+                                        ));
                               },
                               text: 'Add a review for this product'),
-                         
                         ],
                       ),
                     ),
-                     SizedBox(
-                            height: screenSize.height,
-                            child: ListView.builder(
-                              itemBuilder: (context, index) {
-                                return ReviewWidget(
-                                    review: ReviewModel(
-                                        senderName: 'Sender',
-                                        description: 'description',
-                                        rating: 4));
-                              },
-                              itemCount: 10,
-                            ),
-                          )
+                    SizedBox(
+                        height: screenSize.height,
+                        child: StreamBuilder(
+                          builder: (context,
+                              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                  snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container();
+                            } else {
+                              return ListView.builder(
+                                itemBuilder: (context, index) {
+                                  ReviewModel model =
+                                      ReviewModel.getModelFromJson(
+                                          json: snapshot.data!.docs[index]
+                                              .data());
+                                  return ReviewWidget(review: model);
+                                },
+                                itemCount: snapshot.data!.docs.length,
+                              );
+                            }
+                          },
+                          stream: FirebaseFirestore.instance
+                              .collection('products')
+                              .doc(widget.productModel.uid)
+                              .collection('reviews')
+                              .snapshots(),
+                        ))
                   ],
                 ),
               ),
             ),
             UserDetailsBar(
-                offset: 0,
-                ),
+              offset: 0,
+            ),
           ],
         ),
       ),
